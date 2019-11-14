@@ -57,14 +57,41 @@ public class Jiqima : MonoBehaviour
         DataSet ds = sa.SelectWhere("user",new string[] { "User","password"},new string[] { UserStr,PwStr});
         print(ds.Tables[0].Rows);
         if (ds.Tables[0].Rows.Count > 0) {
-            print(ds.Tables[0]);
-            string asdf= ds.Tables[0].Select()[0]["Time"].ToString();
-            if (int.Parse(asdf) > 0)
+            DateTime timeStart = (DateTime)ds.Tables[0].Select()[0]["TimeStart"];
+            int StartYear = int.Parse(timeStart.ToString("yyyy"));
+            int StartMonth = int.Parse(timeStart.ToString("MM"));
+            int StartDay = int.Parse(timeStart.ToString("dd"));
+
+
+            DateTime timeEnd = (DateTime)ds.Tables[0].Select()[0]["TimeEnd"];
+            int EndYear = int.Parse(timeEnd.ToString("yyyy"));
+            int EndMonth = int.Parse(timeEnd.ToString("MM"));
+            int EndDay = int.Parse(timeEnd.ToString("dd"));
+
+            if (EndYear - StartYear > 0)
             {
-                print("登陆成功，您的时间还剩余" + asdf);
+                print("登陆成功，您的到期时间为:" + timeEnd);
+            }
+            else if (EndYear - StartYear == 0)
+            {
+                if (EndMonth - StartMonth >= 0)
+                {
+                    print("登陆成功，您的到期时间为:" + timeEnd);
+                }
+                else
+                {
+                    if (EndDay - StartDay >= 0)
+                    {
+                        print("登陆成功，您的到期时间为:" + timeEnd);
+                    }
+                    else
+                    {
+                        print("软件已到期，请联系管理员更改时间");
+                    }
+                }
             }
             else {
-                print("时间已到期，请联系管理员更改时间");
+                print("软件已到期，请联系管理员更改时间");
             }
         }
         else {
